@@ -1,0 +1,20 @@
+from flask import Flask, render_template
+import os
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/audio/<lang>')
+def audio(lang):
+    audio_dir = os.path.join(app.static_folder, 'audio', lang)
+    if os.path.exists(audio_dir):
+        files = [f for f in os.listdir(audio_dir) if f.endswith('.wav')]
+    else:
+        files = []
+    return render_template('audio.html', lang=lang, files=files)
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
